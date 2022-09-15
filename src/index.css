@@ -5,7 +5,11 @@
     margin: 10px;
 }
 
-.employee_home {
+.hidden-username {
+    display: none;
+}
+
+.employee-home {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
@@ -13,7 +17,7 @@
     padding: 5px;
 }
 
-.employee_block {
+.employee-block {
     display: inline-block;
     text-align: center;
     margin: 5px;

@@ -20,11 +20,12 @@ async function fetchEmployees() {
 
 function Employee({ employee }) {
     return (
-        <div className='employee_block'>
+        <div className='employee-block'>
             <img src={employee.picture.large}
                 alt="img"
             />
-            <h3>{employee.name.first}</h3>
+            <span className='hidden-username'>{employee.login.username}</span>
+            <h3 className='name'>{employee.name.first}</h3>
             <ul>
                 <li>{employee.email}</li>
                 <li>{employee.location.city}</li>
@@ -35,40 +36,46 @@ function Employee({ employee }) {
 
 function EmployeeList({employees}) {
     return (
-        <div className='employee_home'>
+        <div className='employee-home'>
             {employees.map(employee => (
-                <Employee employee={employee} key={employee.login.uuid}/>
+                <Employee
+                    employee={employee}
+                    key={employee.login.uuid}
+                />
             ))}
         </div>
     );
 }
 
-// function renderEmployees(_employee) {
-//     return (
-//         <div className="employee" data-username={_employee.login.username}>
-//           <div className="img-container">
-//             <img
-//               src='`${_employee.picture.large}`'
-//               alt="img"
-//             />
-//           </div>
-//           <div className="name">{_employee.name.first} {_employee.name.last}</div>
-//           <div className="email">{_employee.email}</div>
-//         </div>
-//     )
-// }
-
-
 function Search() {
+    const blocklist = document.querySelectorAll('.employee-block');
+    const blockarray = Array.from(blocklist);
+
+    const onSearch = (e) => {
+        e.preventDefault();
+        const value = e.target.value.toLowerCase();
+        if (!value) blockarray.forEach((eblock) => (eblock.style.display = "inline-block"));
+        if (!value.length) return;
+        console.log(value, blockarray);
+        blockarray.forEach((eblock) => {
+            const name = eblock.querySelector('.name').innerHTML.toLowerCase();
+            const username = eblock.querySelector('.hidden-username').innerHTML.toLowerCase();
+            console.log(username, name);
+            if ((value && name.includes(value)) || username.includes(value)) {
+                eblock.style.display = "inline-block";
+            } else {
+                eblock.style.display = "none";
+            }
+        })
+    }
 
     return (
-        <form className="form">
-            <input
-                type="search"
-                placeholder="search employee directory"
-                id="search"
-            />
-        </form>
+        <input
+            type="search"
+            placeholder="search employee directory"
+            id="search"
+            onChange={onSearch}
+        />
     );
 }
 
@@ -106,3 +113,7 @@ function Page() {
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<Page />);
+
+//setstate는 비동기적으로 한번에 실행됨
+//리액트는 직접조작을 지양
+//위에서는 employee리스트 만들고 search로 조작하여 하위로 전달
