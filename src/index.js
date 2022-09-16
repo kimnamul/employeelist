@@ -47,26 +47,60 @@ function EmployeeList({employees}) {
     );
 }
 
-function Search() {
-    const blocklist = document.querySelectorAll('.employee-block');
-    const blockarray = Array.from(blocklist);
+// function Search() {
+//     const blocklist = document.querySelectorAll('.employee-block');
+//     const blockarray = Array.from(blocklist);
+
+//     const onSearch = (e) => {
+//         e.preventDefault();
+//         const value = e.target.value.toLowerCase();
+//         if (!value.length) return;
+//         console.log(value, blockarray);
+//         blockarray.forEach((eblock) => {
+//             const name = eblock.querySelector('.name').innerHTML.toLowerCase();
+//             const username = eblock.querySelector('.hidden-username').innerHTML.toLowerCase();
+//             console.log(username, name);
+//             if ((value && name.includes(value)) || username.includes(value)) {
+//                 eblock.style.display = "inline-block";
+//             } else {
+//                 eblock.style.display = "none";
+//             }
+//         })
+//     }
+
+//     return (
+//         <input
+//             type="search"
+//             placeholder="search employee directory"
+//             id="search"
+//             onChange={onSearch}
+//         />
+//     );
+// }
+
+//{employees}: employee 배열
+function Search(props) {
 
     const onSearch = (e) => {
         e.preventDefault();
         const value = e.target.value.toLowerCase();
-        if (!value) blockarray.forEach((eblock) => (eblock.style.display = "inline-block"));
         if (!value.length) return;
-        console.log(value, blockarray);
-        blockarray.forEach((eblock) => {
-            const name = eblock.querySelector('.name').innerHTML.toLowerCase();
-            const username = eblock.querySelector('.hidden-username').innerHTML.toLowerCase();
-            console.log(username, name);
-            if ((value && name.includes(value)) || username.includes(value)) {
-                eblock.style.display = "inline-block";
-            } else {
-                eblock.style.display = "none";
-            }
-        })
+        console.log(value, props.employees);
+        const searchresult = props.employees.filter(
+            employee => employee.login.username.toLowerCase().includes(value)
+            || employee.name.first.toLowerCase().includes(value)
+        )
+        props.setEmployeeState({employee: searchresult});
+        // const searchresult = employees;
+        // searchresult.forEach((employee) => {
+        //     const name = employee.name.first.toLowerCase();
+        //     const username = employee.login.username.toLowerCase();
+        //     console.log(username, name);
+        //     if ((value && name.includes(value)) || username.includes(value)) {
+        //     } else {
+        //     }
+        // })
+        // setEmployeeState({employee: searchresult});
     }
 
     return (
@@ -100,7 +134,7 @@ function Page() {
             <div className='title'>
                 <h1>List of Employees</h1>
             </div>
-            <Search />
+            <Search setEmployeeState={setEmployeeState} employees={employeeState.employee}/>
             <div id='employees'>
                 <EmployeeList employees={employeeState.employee}/>
             </div>
