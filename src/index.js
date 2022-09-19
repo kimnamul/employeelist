@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
-function Modal() {}
-
 async function fetchEmployees() {
   try {
     const res = await fetch("https://randomuser.me/api/?results=12");
@@ -14,9 +12,46 @@ async function fetchEmployees() {
   }
 }
 
-function Employee({ employee }) {
+function Modal(props) {
   return (
-    <div className="employee-block">
+    <div
+      id="modal-back"
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        props.setIsModal(false);
+      }}
+    >
+      <div
+        id="modal"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      >
+        <img src={props.employee.picture.large} alt="img" />
+        <h3 className="name">{props.employee.name.first}</h3>
+        <div className="username">{props.employee.login.username}</div>
+        <div>{props.employee.email}</div>
+        <div>{props.employee.location.city}</div>
+      </div>
+    </div>
+  );
+}
+//모달 닫기가 안됨 --> 모달이 emp block 아래에 있어서 true false 클릭이 겹침. stopPropagation
+
+function Employee({ employee }) {
+  const [isModal, setIsModal] = useState(false);
+  return (
+    <div
+      className="employee-block"
+      onClick={() => {
+        setIsModal(true);
+      }}
+    >
+      {isModal === true ? (
+        <Modal setIsModal={setIsModal} employee={employee} />
+      ) : null}
       <img src={employee.picture.large} alt="img" />
       <span className="hidden-username">{employee.login.username}</span>
       <h3 className="name">{employee.name.first}</h3>
@@ -138,7 +173,6 @@ function Page() {
       <div id="employees">
         <EmployeeList employees={employeeState.employee} />
       </div>
-      <div id="modal"></div>
     </div>
   );
 }
