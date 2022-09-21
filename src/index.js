@@ -8,7 +8,7 @@ async function fetchEmployees() {
     const { results } = await res.json();
     return results;
   } catch (error) {
-    console.error("fetch failure", error);
+    alert("Fetch Failure. Refresh Recommended.");
   }
 }
 
@@ -139,18 +139,18 @@ function Search(props) {
 
 function Page() {
   const [fetchedState, setFetchedState] = useState({
-    employee: [],
+    employees: [],
   });
 
   const [employeeState, setEmployeeState] = useState({
-    employee: [],
+    employees: [],
   });
 
   useEffect(() => {
     fetchEmployees().then((result) => {
       console.log("result:", result);
-      setFetchedState({ employee: result });
-      setEmployeeState({ employee: result });
+      setFetchedState({ employees: result });
+      setEmployeeState({ employees: result });
     });
   }, []);
 
@@ -168,10 +168,10 @@ function Page() {
       </div>
       <Search
         setEmployeeState={setEmployeeState}
-        employees={fetchedState.employee}
+        employees={fetchedState.employees}
       />
       <div id="employees">
-        <EmployeeList employees={employeeState.employee} />
+        <EmployeeList employees={employeeState.employees} />
       </div>
     </div>
   );
